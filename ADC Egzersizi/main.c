@@ -44,7 +44,7 @@ int main(void)
 void ADC_Okuma() {
 	HAL_ADC_Start(&hadc1);
 	for(int i=0; i<2; i++){
-	  if(HAL_ADC_PollForConversion(&hadc1, 1000000) == HAL_OK){
+	  if(HAL_ADC_PollForConversion(&hadc1, 100000) == HAL_OK){
 		  adc_value[i] = HAL_ADC_GetValue(&hadc1);
 	  }
 	}
