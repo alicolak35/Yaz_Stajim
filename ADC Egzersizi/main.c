@@ -29,7 +29,8 @@ void ADC_Okuma() {
 	  }
 	}
 	  Vdda = (float) 3.3 * (*V_ref_Cal) / adc_value[1];
-	  Vadc = Vdda * adc_value[0] / 4095;
+	  Vadc = Vdda * adc_value[0] / 4095;//Vdda değeri, dolayısılya V_ref_Cal değeri 3.2 gibi değerlerden büyük olmalı ki 
+										//4095'e bölününce tam sayı değer elde edilebilrsin
 	  }
 
 
@@ -39,6 +40,34 @@ void ADC_Okuma() {
 	  ADC_Okuma();
     
   }
+}
+
+static void MX_ADC1_Init(void)
+{
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = ENABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 2;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+
+  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+
+  sConfig.Channel = ADC_CHANNEL_VREFINT;
+  sConfig.Rank = 2;
+  sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
+
 }
 
 void SystemClock_Config(void)
@@ -65,35 +94,6 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
-
-}
-
-static void MX_ADC1_Init(void)
-{
-  ADC_ChannelConfTypeDef sConfig = {0};
-
-
-  hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV4;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
-  hadc1.Init.ScanConvMode = ENABLE;
-  hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
-  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 2;
-  hadc1.Init.DMAContinuousRequests = DISABLE;
-  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
-
-  sConfig.Channel = ADC_CHANNEL_0;
-  sConfig.Rank = 1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-
-  sConfig.Channel = ADC_CHANNEL_VREFINT;
-  sConfig.Rank = 2;
-  sConfig.SamplingTime = ADC_SAMPLETIME_56CYCLES;
 
 }
 
